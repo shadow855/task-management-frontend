@@ -30,9 +30,9 @@ const Navbar = () => {
                 <Text
                     display='flex' alignItems='center'
                     justifyContent='center'
-                    fontSize={30}
+                    fontSize={38}
                 >
-                    Dashboard
+                    Task-Manager-Web-App
                 </Text>
             </Box>
             <Box

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputRightElement, Text, VStack, useDisclosure, useToast } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Stack, Text, VStack, useDisclosure, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import { URL } from "../App";
-import { ArrowDownIcon, ArrowForwardIcon, ArrowUpIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { ArrowDownIcon, ArrowForwardIcon, ArrowUpIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons';
 import AlertDialogBox from './AlertDialogBox';
 import EditModal from './EditModal';
 
@@ -16,6 +16,8 @@ const Dashboard = () => {
     const [userName, setUserName] = useState("");
     const [deleteTaskId, setDeleteTaskId] = useState(null);
     const [editTaskId, setEditTaskId] = useState(null);
+    const [valueFilter, setValueFilter] = useState("");
+    const [search, setSearch] = useState("");
 
     const [titleModalSend, setTitleModalSend] = useState("");
     const [descriptionModalSend, setDescriptionModalSend] = useState("");
@@ -42,9 +44,14 @@ const Dashboard = () => {
         fetchTasks();
     }, []);
 
-    const fetchTasks = async () => {
+    const fetchTasks = async (filter = "", search = "") => {
         try {
-            const response = await axios.get(`${URL}/api/task/gettasks`, config);
+            const queryParams = [];
+            if (filter) queryParams.push(`status=${filter}`);
+            if (search) queryParams.push(`title=${search}`);
+            const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
+
+            const response = await axios.get(`${URL}/api/task/getfilteredandsearchedtask${queryString}`, config);
 
             if (response.data.tasks.length === 0) {
                 setTasks([]);
@@ -72,6 +79,20 @@ const Dashboard = () => {
             });
         }
     };
+
+    const handleSearchAndFilter = () => {
+        fetchTasks(valueFilter, search);
+    };
+
+    const handleClearSearchFilter = () => {
+        setValueFilter("");
+        setSearch("");
+        fetchTasks("", "");
+    };
+
+    useEffect(() => {
+        handleSearchAndFilter();
+    }, [valueFilter]);
 
     const handleAdd = async () => {
         setLoading(true);
@@ -211,6 +232,8 @@ const Dashboard = () => {
         }
     };
 
+
+
     return (
         <VStack spacing={5}>
             <Box
@@ -221,7 +244,6 @@ const Dashboard = () => {
                 w={{ base: '300px', sm: '450px' }}
                 mt={5}
             >
-                <Text fontSize={38} >Task-Manager-Web-App</Text>
                 <Text fontSize={34} mb={5} >Welcome: {userName}</Text>
                 <Box
                     backgroundColor="rgba(0, 0, 0, 0.7)"
@@ -269,7 +291,52 @@ const Dashboard = () => {
                             Add Task
                         </Button>
                     </Box>
-                    <Text fontSize={25} mt={5} mb={5}>Tasks:</Text>
+                    <Text fontSize={25} mt={5} mb={2}>Tasks:</Text>
+                    <Box
+                        mb={5}
+                        display='flex'
+                        justifyContent='space-between'
+                        alignItems='center'
+                    >
+                        <RadioGroup
+                            value={valueFilter}
+                            onChange={setValueFilter}
+                            mr={5}
+                            display='flex'
+                            alignItems='center'
+                        >
+                            <Stack
+                                spacing={3}
+                                direction='row'
+                                display='flex'
+                                alignItems='center'
+                            >
+                                <Text>Filter: </Text>
+                                <Radio value="pending">Pending</Radio>
+                                <Radio value="completed">Completed</Radio>
+                            </Stack>
+                        </RadioGroup>
+                        <InputGroup>
+                            <Input
+                                type='name'
+                                placeholder='Search by Title'
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
+                            <InputRightElement>
+                                <Button onClick={handleSearchAndFilter}>
+                                    <Icon
+                                        as={SearchIcon}
+                                        boxSize={5}
+                                        color="red.500"
+                                        ml={5}
+                                        mr={5}
+                                        cursor="pointer" />
+                                </Button>
+                            </InputRightElement>
+                        </InputGroup>
+                        <Button onClick={handleClearSearchFilter}>Clear</Button>
+                    </Box>
 
                     <Accordion allowMultiple>
                         {tasks.map((task, index) => (
