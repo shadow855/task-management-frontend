@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Stack, Text, VStack, useDisclosure, useToast } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Select, Stack, Text, VStack, useDisclosure, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import { URL } from "../App";
 import { ArrowDownIcon, ArrowForwardIcon, ArrowUpIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons';
@@ -18,6 +18,8 @@ const Dashboard = () => {
     const [editTaskId, setEditTaskId] = useState(null);
     const [valueFilter, setValueFilter] = useState("");
     const [search, setSearch] = useState("");
+    const [sortByDate, setSortByDate] = useState("");
+    const [sortByPriority, setSortByPriority] = useState("");
 
     const [titleModalSend, setTitleModalSend] = useState("");
     const [descriptionModalSend, setDescriptionModalSend] = useState("");
@@ -44,11 +46,25 @@ const Dashboard = () => {
         fetchTasks();
     }, []);
 
-    const fetchTasks = async (filter = "", search = "") => {
+    const handleSortByDate = (sortByValue) => {
+        setSortByDate(sortByValue);
+    };
+
+    const handleSortByPriority = (sortByValue) => {
+        setSortByPriority(sortByValue);
+    };
+
+    useEffect(() => {
+        fetchTasks(valueFilter, search, sortByDate, sortByPriority);
+    }, [valueFilter, sortByDate, sortByPriority]);
+
+    const fetchTasks = async (filter = "", search = "", sortByDate = "", sortByPriority = "") => {
         try {
             const queryParams = [];
             if (filter) queryParams.push(`status=${filter}`);
             if (search) queryParams.push(`title=${search}`);
+            if (sortByDate) queryParams.push(`${sortByDate}`);
+            if (sortByPriority) queryParams.push(`${sortByPriority}`);
             const queryString = queryParams.length > 0 ? `?${queryParams.join('&')}` : '';
 
             const response = await axios.get(`${URL}/api/task/getfilteredandsearchedtask${queryString}`, config);
@@ -251,7 +267,7 @@ const Dashboard = () => {
                     borderRadius="10px"
                     padding="20px"
                     color='white'
-                    w={600}
+                    w={700}
                 >
                     <Box
                         display='flex'
@@ -336,6 +352,46 @@ const Dashboard = () => {
                             </InputRightElement>
                         </InputGroup>
                         <Button onClick={handleClearSearchFilter}>Clear</Button>
+                    </Box>
+
+                    {/* put components for sorting here */}
+                    <Box
+                        display='flex'
+                        justifyContent='space-between'
+                        alignItems='center'
+                        // w='100%'
+                        mb={5}
+                    >
+                        <Text>Sort By Date:</Text>
+                        <Select
+                            value={sortByDate}
+                            onChange={(e) => handleSortByDate(e.target.value)}
+                            color='black'
+                            backgroundColor='white'
+                        >
+                            <option value="">Select</option>
+                            <option value="sortField=createdAt&sortOrder=asc">By Date, Asc</option>
+                            <option value="sortField=createdAt&sortOrder=desc">By Date, Desc</option>
+                        </Select>
+                    </Box>
+                    <Box
+                        display='flex'
+                        justifyContent='space-between'
+                        alignItems='center'
+                        // w='100%'
+                        mb={5}
+                    >
+                        <Text>Sort By Priority:</Text>
+                        <Select
+                            value={sortByPriority}
+                            onChange={(e) => handleSortByPriority(e.target.value)}
+                            color='black'
+                            backgroundColor='white'
+                        >
+                            <option value="">Select</option>
+                            <option value="priorityOrder=asc">By Priority, Asc</option>
+                            <option value="priorityOrder=desc">By Priority, Desc</option>
+                        </Select>
                     </Box>
 
                     <Accordion allowMultiple>
