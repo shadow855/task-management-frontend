@@ -44,7 +44,7 @@ const Dashboard = () => {
     };
 
     useEffect(() => {
-        fetchTasks();
+        fetchTasks("", "", "", "");
     }, []);
 
     const handleSortByDate = (sortByValue) => {
@@ -98,7 +98,7 @@ const Dashboard = () => {
     };
 
     const handleSearchAndFilter = () => {
-        fetchTasks(valueFilter, search);
+        fetchTasks(valueFilter, search, sortByDate, sortByPriority);
     };
 
     const handleClearSearchFilterSort = () => {
@@ -147,6 +147,7 @@ const Dashboard = () => {
             setTitle("");
             setDescription("");
             fetchTasks();
+            handleClearSearchFilterSort();
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -181,7 +182,7 @@ const Dashboard = () => {
                 isClosable: true,
                 position: 'bottom',
             });
-            fetchTasks();
+            fetchTasks(valueFilter, search, sortByDate, sortByPriority);
         } catch (error) {
             toast({
                 title: error.response.data.message || 'Error Occurred!',
@@ -213,7 +214,7 @@ const Dashboard = () => {
                 position: 'bottom',
             });
 
-            fetchTasks();
+            fetchTasks(valueFilter, search, sortByDate, sortByPriority);
         } catch (error) {
             toast({
                 title: error.response.data.message || 'Error Occurred!',
@@ -238,7 +239,7 @@ const Dashboard = () => {
                 position: 'bottom',
             });
 
-            fetchTasks();
+            fetchTasks(valueFilter, search, sortByDate, sortByPriority);
         } catch (error) {
             console.error('Error updating task status:', error);
             toast({
