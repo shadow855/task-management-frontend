@@ -14,11 +14,14 @@ const Login = () => {
     const navigate = useNavigate();
     const toast = useToast();
 
+    //function to show or hide password
     const handleClick = () => setShow(!show);
+
     const movetosignup = () => {
         navigate('/signup');
     }
 
+    //function to login user
     const handleSignin = async () => {
         setLoading(true);
 
@@ -58,7 +61,7 @@ const Login = () => {
             });
 
             setLoading(false);
-            navigate('/dashboard');
+            navigate('/dashboard'); //navigate to dashboard if logged in successfully
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -82,6 +85,8 @@ const Login = () => {
                 mt={5}
             >
                 <Text fontSize={38}>Login</Text>
+
+                {/* email form control */}
                 <FormControl isRequired>
                     <FormLabel>EMAIL:</FormLabel>
                     <Input
@@ -91,6 +96,7 @@ const Login = () => {
                         onChange={(e) => setEmail(e.target.value)}
                     />
                 </FormControl>
+                {/* password form control */}
                 <FormControl isRequired mt={7}>
                     <FormLabel>PASSWORD:</FormLabel>
                     <InputGroup>
@@ -101,6 +107,8 @@ const Login = () => {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <InputRightElement width='4rem'>
+
+                            {/* button to show/hide password */}
                             <Button h='1.75rem' size='sm' onClick={handleClick}>
                                 <ViewIcon w={4} h={4}>
                                     {show ? 'Hide' : 'Show'}

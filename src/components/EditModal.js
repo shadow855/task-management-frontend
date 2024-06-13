@@ -22,6 +22,7 @@ const EditModal = ({ isOpen, onClose, onEdit, title: initialTitle, description: 
     const [descriptionModalEdit, setDescriptionModalEdit] = useState(initialDescription);
     const [priorityModalEdit, setPriorityModalEdit] = useState(initialPriority);
 
+    // setting initialized values as soon as component mounts
     useEffect(() => {
         setTitleModalEdit(initialTitle);
         setDescriptionModalEdit(initialDescription);

@@ -17,9 +17,11 @@ const Signup = () => {
     const navigate = useNavigate();
     const toast = useToast();
 
+    //functions to hide/show password and confirm password
     const handleClickPassword = () => setShowPassword(!showPassword);
     const handleClickConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
 
+    //function to handle registration
     const handleSignup = async () => {
         setLoading(true);
 
@@ -82,10 +84,13 @@ const Signup = () => {
         }
     };
 
+    const handleLogin = () => {
+        navigate('/login');
+    }
+
     return (
         <VStack spacing={5}>
             <Box
-                // border='1px solid red'
                 display='flex'
                 flexDirection='column'
                 justifyContent='center'
@@ -94,6 +99,8 @@ const Signup = () => {
                 mt={5}
             >
                 <Text fontSize={38}>Create Account</Text>
+
+                {/* name form control */}
                 <FormControl isRequired>
                     <FormLabel>NAME:</FormLabel>
                     <Input
@@ -103,6 +110,8 @@ const Signup = () => {
                         onChange={(e) => setName(e.target.value)}
                     />
                 </FormControl>
+
+                {/* email for control */}
                 <FormControl isRequired mt={7}>
                     <FormLabel>EMAIL:</FormLabel>
                     <Input
@@ -113,6 +122,7 @@ const Signup = () => {
                     />
                 </FormControl>
 
+                {/* password form control */}
                 <FormControl isRequired mt={7}>
                     <FormLabel>PASSWORD:</FormLabel>
                     <InputGroup>
@@ -132,6 +142,7 @@ const Signup = () => {
                     </InputGroup>
                 </FormControl>
 
+                {/* confirm password form control */}
                 <FormControl isRequired mt={7}>
                     <FormLabel>CONFIRM PASSWORD:</FormLabel>
                     <InputGroup>
@@ -164,6 +175,20 @@ const Signup = () => {
                     isLoading={loading}
                 >
                     Create
+                </Button>
+
+                <Button
+                    w='100%'
+                    backgroundColor='#5D5D5D'
+                    _hover={{
+                        backgroundColor: '#333333'
+                    }}
+                    color='white'
+                    mb={5}
+                    onClick={handleLogin}
+                    isLoading={loading}
+                >
+                    Already Registered? Login Here
                 </Button>
             </Box>
         </VStack >

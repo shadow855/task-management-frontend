@@ -1,3 +1,5 @@
+// component to show logged in user detail and edit it or logout the user
+
 import {
     Modal,
     ModalOverlay,
@@ -10,9 +12,6 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Radio,
-    Stack,
-    RadioGroup,
     Text,
     Box,
     InputGroup,
@@ -49,6 +48,7 @@ const LoginDetails = ({ isOpen, onClose }) => {
     }, [])
 
 
+    //function to fetch name/email of logged in user
     const fetchLoggedInUserDetails = async () => {
         try {
             const { data } = await axios.get(`${URL}/api/user/loggeduserdetails`, config);
@@ -66,6 +66,7 @@ const LoginDetails = ({ isOpen, onClose }) => {
         }
     };
 
+    //function to edit name/password of loggedin user
     const editUser = async () => {
         try {
             await axios.put(`${URL}/api/user/login/update`, { name, password }, config);
@@ -80,7 +81,7 @@ const LoginDetails = ({ isOpen, onClose }) => {
 
             setPassword("");
             onClose();
-            localStorage.removeItem('token');
+            localStorage.removeItem('token'); // remove the token from local storage
             navigate('/login');
         } catch (error) {
             toast({
@@ -93,6 +94,7 @@ const LoginDetails = ({ isOpen, onClose }) => {
         }
     };
 
+    //function to handle logout and remove token from local storage after log out
     const logOutUser = () => {
         toast({
             title: 'Logged Out Successfully',
@@ -115,6 +117,8 @@ const LoginDetails = ({ isOpen, onClose }) => {
                     <ModalHeader>User Details</ModalHeader>
                     <ModalCloseButton />
                     <ModalBody>
+
+                        {/* form control for name */}
                         <FormControl>
                             <FormLabel mt={1.5}>Name:</FormLabel>
                             <Input
@@ -123,11 +127,9 @@ const LoginDetails = ({ isOpen, onClose }) => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                             />
+
+                            {/* form control for email */}
                         </FormControl>
-                        {/* <Box display='flex' mt={5}>
-                            <Text mr={4}>Name: </Text>
-                            <Text>{name}</Text>
-                        </Box> */}
                         <FormControl mt={5}>
                             <Text mb={2}>Email:</Text>
                             <Box
@@ -139,6 +141,8 @@ const LoginDetails = ({ isOpen, onClose }) => {
                             >
                                 {email}
                             </Box>
+
+                            {/* form control for password */}
                         </FormControl>
                         <FormControl mt={5}>
                             <FormLabel>Password:</FormLabel>
@@ -150,6 +154,8 @@ const LoginDetails = ({ isOpen, onClose }) => {
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
                                 <InputRightElement width='4rem'>
+
+                                    {/* buttton to show/hide password */}
                                     <Button h='1.75rem' size='sm' onClick={handleClick}>
                                         <ViewIcon w={4} h={4}>
                                             {show ? 'Hide' : 'Show'}

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Select, Stack, Text, VStack, useBreakpointValue, useDisclosure, useToast } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, Input, InputGroup, InputRightElement, Radio, RadioGroup, Select, Spinner, Stack, Text, VStack, useBreakpointValue, useDisclosure, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import { URL } from "../App";
 import { ArrowDownIcon, ArrowForwardIcon, ArrowUpIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons';
@@ -8,33 +8,33 @@ import EditModal from './EditModal';
 
 
 const Dashboard = () => {
-    const [tasks, setTasks] = useState([]);
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [priority, setPriority] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [userName, setUserName] = useState("");
-    const [deleteTaskId, setDeleteTaskId] = useState(null);
-    const [editTaskId, setEditTaskId] = useState(null);
-    const [valueFilter, setValueFilter] = useState("");
-    const [search, setSearch] = useState("");
-    const [sortByDate, setSortByDate] = useState("");
-    const [sortByPriority, setSortByPriority] = useState("");
+
+    //states
+    const [tasks, setTasks] = useState([]); //for the tasks
+    const [title, setTitle] = useState(""); //for title of task
+    const [description, setDescription] = useState("");//for description of task
+    const [loading, setLoading] = useState(false); //for showing loading icon while doing something with api
+    const [userName, setUserName] = useState(""); //for setting user name of looged in user
+    const [deleteTaskId, setDeleteTaskId] = useState(null); //for getting task id which user want to delete
+    const [editTaskId, setEditTaskId] = useState(null); //for getting task id which user want to edit
+    const [valueFilter, setValueFilter] = useState(""); //for setting filter values to pending/completed
+    const [search, setSearch] = useState(""); //for setting search text
+    const [sortByDate, setSortByDate] = useState(""); //to manage sorting by date
+    const [sortByPriority, setSortByPriority] = useState("");//to manage sorting by priority
 
     const [titleModalSend, setTitleModalSend] = useState("");
     const [descriptionModalSend, setDescriptionModalSend] = useState("");
     const [priorityModalSend, setPriorityModalSend] = useState('');
 
-    const [isAlertDialogBoxOpen, setAlertDialogBoxOpen] = useState(false);
-    const [isEditModalOpen, setEditModalOpen] = useState(false);
+    const [isAlertDialogBoxOpen, setAlertDialogBoxOpen] = useState(false); //to manage opening/closing of Delete Task dialog Box
+    const [isEditModalOpen, setEditModalOpen] = useState(false); //to manage opening/closing of Edit Task Modal
 
-    const { isOpen, onOpen, onClose } = useDisclosure();
-    const showTextWelcome = useBreakpointValue({ base: false, md: true });
+    const showTextWelcome = useBreakpointValue({ base: false, md: true }); //to check width of screen and show Text component accordingly
 
     const cancelRef = useRef();
     const toast = useToast();
 
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); //storing token in localStorage
 
     const config = {
         headers: {
@@ -47,10 +47,12 @@ const Dashboard = () => {
         fetchTasks("", "", "", "");
     }, []);
 
+    // for handling sorting by date
     const handleSortByDate = (sortByValue) => {
         setSortByDate(sortByValue);
     };
 
+    // for handling sorting by priority
     const handleSortByPriority = (sortByValue) => {
         setSortByPriority(sortByValue);
     };
@@ -59,6 +61,7 @@ const Dashboard = () => {
         fetchTasks(valueFilter, search, sortByDate, sortByPriority);
     }, [valueFilter, sortByDate, sortByPriority]);
 
+    //function for fetching tasks based on filter/search/sorting
     const fetchTasks = async (filter = "", search = "", sortByDate = "", sortByPriority = "") => {
         try {
             const queryParams = [];
@@ -74,13 +77,14 @@ const Dashboard = () => {
                 setTasks([]);
                 setUserName(response.data.user);
                 toast({
-                    title: "No task found.",
+                    title: "No task found.", // if no tasks found show the toast
                     status: 'info',
                     duration: 5000,
                     isClosable: true,
                     position: 'bottom',
                 });
             } else {
+                //if tasks are present show tasks and name of user
                 setTasks(response.data.tasks);
                 setUserName(response.data.user);
             }
@@ -101,6 +105,7 @@ const Dashboard = () => {
         fetchTasks(valueFilter, search, sortByDate, sortByPriority);
     };
 
+    //for clearing filter/search/sort values
     const handleClearSearchFilterSort = () => {
         setValueFilter("");
         setSearch("");
@@ -113,6 +118,7 @@ const Dashboard = () => {
         handleSearchAndFilter();
     }, [valueFilter]);
 
+    // function to add the task
     const handleAdd = async () => {
         setLoading(true);
 
@@ -146,8 +152,8 @@ const Dashboard = () => {
             setLoading(false);
             setTitle("");
             setDescription("");
-            fetchTasks();
-            handleClearSearchFilterSort();
+            fetchTasks(); // fetching all tasks again irrespective of any filter/sort/search after adding a task
+            handleClearSearchFilterSort(); //calling clear function to reset any filter/sort/search
         } catch (error) {
             toast({
                 title: error.response.data.message || "Error Occurred!",
@@ -160,6 +166,7 @@ const Dashboard = () => {
         }
     };
 
+    //function to open modal for edit task
     const handleEditTask = async (task, id) => {
         setTitleModalSend(task.title);
         setDescriptionModalSend(task.description);
@@ -168,6 +175,7 @@ const Dashboard = () => {
         setEditModalOpen(true);
     };
 
+    //function to edit task 
     const handleEditConfirmation = async (updatedTitle, updatedDescription, updatedPriority) => {
         try {
             await axios.put(
@@ -196,12 +204,13 @@ const Dashboard = () => {
         }
     };
 
-
+    //function to open delete alert dialog box
     const handleDeleteTask = (id) => {
         setDeleteTaskId(id);
         setAlertDialogBoxOpen(true);
     };
 
+    //function to delete task
     const handleDeleteConfirmation = async () => {
         try {
             await axios.delete(`${URL}/api/task/deletetask/${deleteTaskId}`, config);
@@ -228,6 +237,7 @@ const Dashboard = () => {
         }
     };
 
+    //function to change status of task
     const handleStatusChange = async (id, status) => {
         try {
             await axios.put(`${URL}/api/task/taskstatus/${id}`, { status }, config);
@@ -262,13 +272,17 @@ const Dashboard = () => {
                 w={{ base: '300px', sm: '450px' }}
                 mt={5}
             >
+                {/* check width of screen and show the texts accordingly */}
                 {showTextWelcome ?
-                    <Text fontSize={{ base: '25px', sm: '34px' }} mb={5} w={{ base: '', sm: '450px', md: '700px' }} textAlign='center'>Welcome: {userName}</Text> : (
+                    <Text fontSize={{ base: '25px', sm: '34px' }} mb={5} w={{ base: '', sm: '450px', md: '700px' }} textAlign='center'>Welcome: {userName}</Text>
+                    : (
                         <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
                             <Text fontSize={{ base: '25px', sm: '34px' }}>Welcome</Text>
                             <Text fontSize={{ base: '25px', sm: '34px' }} mb={5}>{userName}</Text>
                         </Box>
                     )}
+
+                {/* main box to display the contents */}
                 <Box
                     backgroundColor="rgba(0, 0, 0, 0.7)"
                     backdropFilter="blur(3px)"
@@ -277,6 +291,7 @@ const Dashboard = () => {
                     color='white'
                     w={{ base: '', sm: '450px', md: '700px' }}
                 >
+                    {/* box for adding task */}
                     <Box
                         display='flex'
                         flexDirection='column'
@@ -315,7 +330,10 @@ const Dashboard = () => {
                             Add Task
                         </Button>
                     </Box>
+
                     <Text fontSize={25} mt={5} mb={2}>Tasks:</Text>
+
+                    {/* box to for filtering and searching */}
                     <Box
                         mb={5}
                         display='flex'
@@ -361,16 +379,17 @@ const Dashboard = () => {
                                     </Button>
                                 </InputRightElement>
                             </InputGroup>
+
+                            {/* clear button to reset all filter/search/sort values */}
                             <Button onClick={handleClearSearchFilterSort} ml={2}>Clear</Button>
                         </Box>
                     </Box>
 
-                    {/* put components for sorting here */}
+                    {/* box to sort by date */}
                     <Box
                         display='flex'
                         justifyContent='space-between'
                         alignItems='center'
-                        // w='100%'
                         mb={5}
                     >
                         <Text>Sort By Date:</Text>
@@ -386,11 +405,12 @@ const Dashboard = () => {
                             <option value="sortField=createdAt&sortOrder=desc">By Date, Desc</option>
                         </Select>
                     </Box>
+
+                    {/* box to sort by priority */}
                     <Box
                         display='flex'
                         justifyContent='space-between'
                         alignItems='center'
-                        // w='100%'
                         mb={5}
                     >
                         <Text>Sort By Priority:</Text>
@@ -407,55 +427,73 @@ const Dashboard = () => {
                         </Select>
                     </Box>
 
-                    <Accordion allowMultiple>
-                        {tasks.map((task, index) => (
-                            <AccordionItem key={index}>
-                                <h2>
-                                    <AccordionButton cursor='default' flexDirection={{ base: 'column', md: 'row' }}>
-                                        <Box as='span' flex='1' textAlign='left' fontWeight='500' fontSize={20}>
-                                            {index + 1}. {task.title}
-                                        </Box>
-                                        <Box display='flex' alignItems='center'>
-                                            <Box as='span' mr={5}>
-                                                {task.priority === 'high' && <ArrowUpIcon color="red.500" />}
-                                                {task.priority === 'medium' && <ArrowForwardIcon color="yellow.500" />}
-                                                {task.priority === 'low' && <ArrowDownIcon color="green.500" />}
+                    {/* check if tasks are available, if yes show them, if not show spinner */}
+                    {tasks ?
+                        <Accordion allowMultiple>
+                            {tasks.map((task, index) => (
+                                <AccordionItem key={index}>
+                                    <h2>
+                                        <AccordionButton cursor='default' flexDirection={{ base: 'column', md: 'row' }}>
+
+                                            {/* for showing task title/priority*/}
+                                            <Box as='span' flex='1' textAlign='left' fontWeight='500' fontSize={20}>
+                                                {index + 1}. {task.title}
                                             </Box>
-                                            <Icon
-                                                as={EditIcon}
-                                                boxSize={5}
-                                                color="blue.500"
-                                                onClick={() => handleEditTask(task, task._id)}
-                                                cursor="pointer"
-                                            />
-                                            <Icon
-                                                as={DeleteIcon}
-                                                boxSize={5}
-                                                color="red.500"
-                                                ml={5}
-                                                mr={5}
-                                                onClick={() => handleDeleteTask(task._id)}
-                                                cursor="pointer"
-                                            />
-                                            <Checkbox
-                                                colorScheme='green'
-                                                isChecked={task.status === 'completed'}
-                                                onChange={(e) => handleStatusChange(task._id, e.target.checked ? 'completed' : 'pending')}
-                                                mr={5}
-                                            ></Checkbox>
-                                            <AccordionIcon cursor='pointer' />
-                                        </Box>
-                                    </AccordionButton>
-                                </h2>
-                                {task.description ?
-                                    <AccordionPanel pb={4} pl={10} fontWeight='100' textAlign='justify'>
-                                        {task.description}
-                                    </AccordionPanel> : <></>}
-                            </AccordionItem>
-                        ))}
-                    </Accordion>
+
+                                            <Box display='flex' alignItems='center'>
+                                                {/* for showing task priority */}
+                                                <Box as='span' mr={5}>
+                                                    {task.priority === 'high' && <ArrowUpIcon color="red.500" />}
+                                                    {task.priority === 'medium' && <ArrowForwardIcon color="yellow.500" />}
+                                                    {task.priority === 'low' && <ArrowDownIcon color="green.500" />}
+                                                </Box>
+
+                                                {/* for edit icon */}
+                                                <Icon
+                                                    as={EditIcon}
+                                                    boxSize={5}
+                                                    color="blue.500"
+                                                    onClick={() => handleEditTask(task, task._id)}
+                                                    cursor="pointer"
+                                                />
+
+                                                {/* for delete icon */}
+                                                <Icon
+                                                    as={DeleteIcon}
+                                                    boxSize={5}
+                                                    color="red.500"
+                                                    ml={5}
+                                                    mr={5}
+                                                    onClick={() => handleDeleteTask(task._id)}
+                                                    cursor="pointer"
+                                                />
+                                                {/* for setting status of task */}
+                                                <Checkbox
+                                                    colorScheme='green'
+                                                    isChecked={task.status === 'completed'}
+                                                    onChange={(e) => handleStatusChange(task._id, e.target.checked ? 'completed' : 'pending')}
+                                                    mr={5}
+                                                ></Checkbox>
+                                                <AccordionIcon cursor='pointer' />
+                                            </Box>
+                                        </AccordionButton>
+                                    </h2>
+                                    {/* for showing description of task, if exit show it, if not then don't render accordion panel */}
+                                    {task.description ?
+                                        <AccordionPanel pb={4} pl={10} fontWeight='100' textAlign='justify'>
+                                            {task.description}
+                                        </AccordionPanel> : <></>}
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                        :
+                        <Box display='flex' justifyContent='center'>
+                            <Spinner />
+                        </Box>}
                 </Box>
             </Box>
+
+            {/* passing values to delete alert dialog box */}
             <AlertDialogBox
                 isOpen={isAlertDialogBoxOpen}
                 onClose={() => setAlertDialogBoxOpen(false)}
@@ -463,6 +501,7 @@ const Dashboard = () => {
                 onDelete={handleDeleteConfirmation}
             />
 
+            {/* passing values to edit modal component */}
             <EditModal
                 isOpen={isEditModalOpen}
                 onClose={() => setEditModalOpen(false)}

@@ -1,4 +1,4 @@
-// DeleteAlertDialog.js
+//Alert Dialog Box to ask for delete confirmation
 import React from 'react';
 import {
     AlertDialog,
