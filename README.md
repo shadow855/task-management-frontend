@@ -8,7 +8,7 @@ Before running make .env variables in the root folder (Pull Code) for backend, w
 1. PORT
 2. MONGO_URI
 3. JWT_SECRET
-4. NODE_ENV
+4. NODE_ENV=production
 
 And, make this .env in the root of your frontend folder-> REACT_APP_SERVER_URL=http://localhost:5000
 
