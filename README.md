@@ -1,4 +1,4 @@
-Note: While running the project, please wait if the backend doesn't load immediately. The bakcend API end points works correctly but little slow depending on the network, so please have patience while running my project. Thank you.
+Note: While running the project, please wait if the backend doesn't load immediately. The bakcend API end points works correctly but little slow depending on the network, so please wait for sometime and let the changes from backend to load and render on frontend. Thank you.
 
 # How to Pull the full code
 
