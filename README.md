@@ -10,7 +10,7 @@ Before running make .env variables in the root folder (Pull Code) for backend, w
 3. JWT_SECRET
 4. NODE_ENV=production
 
-And, make this .env in the root of your frontend folder-> REACT_APP_SERVER_URL=http://localhost:5000
+And, make another .env in the root of your frontend folder-> REACT_APP_SERVER_URL=http://localhost:5000
 
 Now,
 In the root project directory, you can run:
