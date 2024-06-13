@@ -263,10 +263,10 @@ const Dashboard = () => {
                 mt={5}
             >
                 {showTextWelcome ?
-                    <Text fontSize={{ base: '25px', sm: '34px' }} mb={5} w={{ base: '', sm: '450px', md: '700px' }}>Welcome: Raiyan Mushtaque Ansari</Text> : (
+                    <Text fontSize={{ base: '25px', sm: '34px' }} mb={5} w={{ base: '', sm: '450px', md: '700px' }} textAlign='center'>Welcome: {userName}</Text> : (
                         <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
-                            <Text fontSize={{ base: '25px', sm: '34px' }}>Welcome:</Text>
-                            <Text fontSize={{ base: '25px', sm: '34px' }} mb={5}>Raiyan Mushtaque Ansari</Text>
+                            <Text fontSize={{ base: '25px', sm: '34px' }}>Welcome</Text>
+                            <Text fontSize={{ base: '25px', sm: '34px' }} mb={5}>{userName}</Text>
                         </Box>
                     )}
                 <Box
