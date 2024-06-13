@@ -56,6 +56,13 @@ const LoginDetails = ({ isOpen, onClose }) => {
             setEmail(data.email);
         } catch (error) {
             console.error("Error fetching user details:", error);
+            toast({
+                title: "Error fetching user details.",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: 'bottom',
+            });
         }
     };
 

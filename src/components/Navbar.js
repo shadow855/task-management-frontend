@@ -56,10 +56,11 @@ const Navbar = () => {
                     <Icon as={RxAvatar} w={{ base: '30px', sm: '38px' }} h={{ base: '30px', sm: '38px' }} onClick={onOpen} />
                 )}
             </Box>
-            <LoginDetails
-                isOpen={isOpen}
-                onClose={onClose}
-            />
+            {location.pathname === '/dashboard' &&
+                <LoginDetails
+                    isOpen={isOpen}
+                    onClose={onClose}
+                />}
         </Box >
     )
 }
