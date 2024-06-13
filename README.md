@@ -1,3 +1,5 @@
+Note: While running the project, please wait if the backend doesn't load immediately. The bakcend API end points works correctly but little slow depending on the network, so please have patience while running my project. Thank you.
+
 # How to Pull the full code
 
 Make a folder on your device (let's say Pull Code) and pull the backend first from the link->https://github.com/shadow855/task-management-backend.
