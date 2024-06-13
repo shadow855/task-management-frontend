@@ -1,7 +1,7 @@
 # How to Pull the full code
 
 Make a folder on your device (let's say Pull Code) and pull the backend first from the link->https://github.com/shadow855/task-management-backend.
-After that make a foler named-> frontend in the root folder (Pull Code Folder) and pull this frontend code in it.
+After that make a folder named-> frontend in the root folder (Pull Code Folder) and pull this frontend code in it.
 
 ## How to Run
 Before running make .env variables in the root folder (Pull Code) for backend, which are->
