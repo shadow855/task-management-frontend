@@ -16,5 +16,5 @@ Now,
 In the root project directory, you can run:
 ### `npm start` to run the backend.
 
-Move to frontend directory using cd frontend command in your root path of (Pull Code) folder, and run frontend using->
+Move to frontend directory using cd frontend command in  root project directory, and run frontend using->
 ### `npm start`
