@@ -355,7 +355,6 @@ const Dashboard = () => {
                                         <Icon
                                             as={SearchIcon}
                                             boxSize={5}
-                                            color="red.500"
                                             ml={5}
                                             mr={5}
                                             cursor="pointer" />
@@ -412,38 +411,40 @@ const Dashboard = () => {
                         {tasks.map((task, index) => (
                             <AccordionItem key={index}>
                                 <h2>
-                                    <AccordionButton cursor='default'>
+                                    <AccordionButton cursor='default' flexDirection={{ base: 'column', md: 'row' }}>
                                         <Box as='span' flex='1' textAlign='left' fontWeight='500' fontSize={20}>
                                             {index + 1}. {task.title}
                                         </Box>
-                                        <Box as='span' mr={5}>
-                                            {task.priority === 'high' && <ArrowUpIcon color="red.500" />}
-                                            {task.priority === 'medium' && <ArrowForwardIcon color="yellow.500" />}
-                                            {task.priority === 'low' && <ArrowDownIcon color="green.500" />}
+                                        <Box display='flex' alignItems='center'>
+                                            <Box as='span' mr={5}>
+                                                {task.priority === 'high' && <ArrowUpIcon color="red.500" />}
+                                                {task.priority === 'medium' && <ArrowForwardIcon color="yellow.500" />}
+                                                {task.priority === 'low' && <ArrowDownIcon color="green.500" />}
+                                            </Box>
+                                            <Icon
+                                                as={EditIcon}
+                                                boxSize={5}
+                                                color="blue.500"
+                                                onClick={() => handleEditTask(task, task._id)}
+                                                cursor="pointer"
+                                            />
+                                            <Icon
+                                                as={DeleteIcon}
+                                                boxSize={5}
+                                                color="red.500"
+                                                ml={5}
+                                                mr={5}
+                                                onClick={() => handleDeleteTask(task._id)}
+                                                cursor="pointer"
+                                            />
+                                            <Checkbox
+                                                colorScheme='green'
+                                                isChecked={task.status === 'completed'}
+                                                onChange={(e) => handleStatusChange(task._id, e.target.checked ? 'completed' : 'pending')}
+                                                mr={5}
+                                            ></Checkbox>
+                                            <AccordionIcon cursor='pointer' />
                                         </Box>
-                                        <Icon
-                                            as={EditIcon}
-                                            boxSize={5}
-                                            color="blue.500"
-                                            onClick={() => handleEditTask(task, task._id)}
-                                            cursor="pointer"
-                                        />
-                                        <Icon
-                                            as={DeleteIcon}
-                                            boxSize={5}
-                                            color="red.500"
-                                            ml={5}
-                                            mr={5}
-                                            onClick={() => handleDeleteTask(task._id)}
-                                            cursor="pointer"
-                                        />
-                                        <Checkbox
-                                            colorScheme='green'
-                                            isChecked={task.status === 'completed'}
-                                            onChange={(e) => handleStatusChange(task._id, e.target.checked ? 'completed' : 'pending')}
-                                            mr={5}
-                                        ></Checkbox>
-                                        <AccordionIcon cursor='pointer' />
                                     </AccordionButton>
                                 </h2>
                                 {task.description ?

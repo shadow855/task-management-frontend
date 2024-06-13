@@ -55,7 +55,7 @@ const EditModal = ({ isOpen, onClose, onEdit, title: initialTitle, description: 
                             />
                         </FormControl>
                         <RadioGroup value={priorityModalEdit} onChange={setPriorityModalEdit}>
-                            <Stack spacing={3} direction={{ base: 'column', sm: 'row' }}>
+                            <Stack spacing={{ base: 1, sm: 3 }} direction='row'>
                                 <Text>Priority: </Text>
                                 <Radio value="low">Low</Radio>
                                 <Radio value="medium">Medium</Radio>

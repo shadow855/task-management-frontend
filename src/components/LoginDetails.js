@@ -80,6 +80,7 @@ const LoginDetails = ({ isOpen, onClose }) => {
 
             setPassword("");
             onClose();
+            localStorage.removeItem('token');
             navigate('/login');
         } catch (error) {
             toast({
@@ -91,6 +92,20 @@ const LoginDetails = ({ isOpen, onClose }) => {
             });
         }
     };
+
+    const logOutUser = () => {
+        toast({
+            title: 'Logged Out Successfully',
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+            position: 'bottom',
+        });
+        localStorage.removeItem('token');
+        onClose();
+        navigate('/login');
+
+    }
 
     return (
         <>
@@ -149,7 +164,8 @@ const LoginDetails = ({ isOpen, onClose }) => {
                         <Button colorScheme='blue' mr={3} onClick={onClose} w={20}>
                             Close
                         </Button>
-                        <Button colorScheme='green' w={20} onClick={editUser}>Edit</Button>
+                        <Button colorScheme='green' w={20} mr={3} onClick={editUser}>Edit</Button>
+                        <Button colorScheme='red' w={20} onClick={logOutUser}>LogOut</Button>
                     </ModalFooter>
                 </ModalContent>
             </Modal >
