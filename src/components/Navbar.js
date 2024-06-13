@@ -1,22 +1,27 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { Box, Icon, Text, Image, useBreakpointValue } from '@chakra-ui/react'
+import { Link, useLocation } from 'react-router-dom'
+import { Box, Icon, Text, Image, useBreakpointValue, useDisclosure } from '@chakra-ui/react'
 import '../Css Folder/wave.css'
+import { RxAvatar } from "react-icons/rx";
+import LoginDetails from './LoginDetails';
 
 const Navbar = () => {
+    const location = useLocation();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const showTextDash = useBreakpointValue({ base: false, md: true });
+
     return (
         <Box
             id='main-nav-box'
             display='flex'
             h={95}
-            border='1px solid red'
         >
             <Box className="fog" />
             <Box
                 flex={1}
                 display='flex'
                 alignItems='center'
-                border='1px solid red'
             >
             </Box>
             <Box
@@ -25,24 +30,33 @@ const Navbar = () => {
                 justifyContent='space-evenly'
                 alignItems='center'
                 textAlign='center'
-                border='1px solid red'
             >
-                <Text
-                    display='flex' alignItems='center'
+                <Box
+                    display='flex'
+                    alignItems='center'
                     justifyContent='center'
-                    fontSize={38}
+                    flexDirection={{ base: 'column', md: "row" }}
+                    fontSize={{ base: '26px', sm: '34px', md: '38px' }}
                 >
-                    Task-Manager-Web-App
-                </Text>
+                    <Text>Task-Manager</Text>
+                    {showTextDash && <Text>-</Text>}
+                    <Text>Web-App</Text>
+                </Box>
             </Box>
             <Box
                 flex={1}
                 display='flex'
                 alignItems='center'
-                justifyContent='flex-end'
-                border='1px solid red'
+                justifyContent='center'
             >
+                {location.pathname === '/dashboard' && (
+                    <Icon as={RxAvatar} w={{ base: '30px', sm: '38px' }} h={{ base: '30px', sm: '38px' }} onClick={onOpen} />
+                )}
             </Box>
+            <LoginDetails
+                isOpen={isOpen}
+                onClose={onClose}
+            />
         </Box >
     )
 }

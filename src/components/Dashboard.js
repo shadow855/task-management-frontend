@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Select, Stack, Text, VStack, useDisclosure, useToast } from '@chakra-ui/react'
+import { Accordion, AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Box, Button, Checkbox, FormControl, FormLabel, Icon, IconButton, Input, InputGroup, InputLeftElement, InputRightElement, Radio, RadioGroup, Select, Stack, Text, VStack, useBreakpointValue, useDisclosure, useToast } from '@chakra-ui/react'
 import axios from 'axios';
 import { URL } from "../App";
 import { ArrowDownIcon, ArrowForwardIcon, ArrowUpIcon, DeleteIcon, EditIcon, SearchIcon } from '@chakra-ui/icons';
@@ -29,6 +29,7 @@ const Dashboard = () => {
     const [isEditModalOpen, setEditModalOpen] = useState(false);
 
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const showTextWelcome = useBreakpointValue({ base: false, md: true });
 
     const cancelRef = useRef();
     const toast = useToast();
@@ -100,10 +101,12 @@ const Dashboard = () => {
         fetchTasks(valueFilter, search);
     };
 
-    const handleClearSearchFilter = () => {
+    const handleClearSearchFilterSort = () => {
         setValueFilter("");
         setSearch("");
-        fetchTasks("", "");
+        setSortByDate("");
+        setSortByPriority("");
+        fetchTasks("", "", "", "");
     };
 
     useEffect(() => {
@@ -248,8 +251,6 @@ const Dashboard = () => {
         }
     };
 
-
-
     return (
         <VStack spacing={5}>
             <Box
@@ -260,14 +261,20 @@ const Dashboard = () => {
                 w={{ base: '300px', sm: '450px' }}
                 mt={5}
             >
-                <Text fontSize={34} mb={5} >Welcome: {userName}</Text>
+                {showTextWelcome ?
+                    <Text fontSize={{ base: '25px', sm: '34px' }} mb={5} w={{ base: '', sm: '450px', md: '700px' }}>Welcome: Raiyan Mushtaque Ansari</Text> : (
+                        <Box display='flex' flexDirection='column' justifyContent='center' alignItems='center'>
+                            <Text fontSize={{ base: '25px', sm: '34px' }}>Welcome:</Text>
+                            <Text fontSize={{ base: '25px', sm: '34px' }} mb={5}>Raiyan Mushtaque Ansari</Text>
+                        </Box>
+                    )}
                 <Box
                     backgroundColor="rgba(0, 0, 0, 0.7)"
                     backdropFilter="blur(3px)"
                     borderRadius="10px"
                     padding="20px"
                     color='white'
-                    w={700}
+                    w={{ base: '', sm: '450px', md: '700px' }}
                 >
                     <Box
                         display='flex'
@@ -312,7 +319,8 @@ const Dashboard = () => {
                         mb={5}
                         display='flex'
                         justifyContent='space-between'
-                        alignItems='center'
+                        alignItems={{ base: 'normal', md: 'center' }}
+                        flexDirection={{ base: 'column', md: 'row' }}
                     >
                         <RadioGroup
                             value={valueFilter}
@@ -320,38 +328,41 @@ const Dashboard = () => {
                             mr={5}
                             display='flex'
                             alignItems='center'
+                            mb={{ base: '3', md: '0' }}
                         >
+                            <Text mr={2}>Filter: </Text>
                             <Stack
                                 spacing={3}
                                 direction='row'
                                 display='flex'
                                 alignItems='center'
                             >
-                                <Text>Filter: </Text>
                                 <Radio value="pending">Pending</Radio>
                                 <Radio value="completed">Completed</Radio>
                             </Stack>
                         </RadioGroup>
-                        <InputGroup>
-                            <Input
-                                type='name'
-                                placeholder='Search by Title'
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                            />
-                            <InputRightElement>
-                                <Button onClick={handleSearchAndFilter}>
-                                    <Icon
-                                        as={SearchIcon}
-                                        boxSize={5}
-                                        color="red.500"
-                                        ml={5}
-                                        mr={5}
-                                        cursor="pointer" />
-                                </Button>
-                            </InputRightElement>
-                        </InputGroup>
-                        <Button onClick={handleClearSearchFilter}>Clear</Button>
+                        <Box display='flex'>
+                            <InputGroup mb={{ base: '3', md: '0' }}>
+                                <Input
+                                    type='name'
+                                    placeholder='Search by Title'
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                />
+                                <InputRightElement>
+                                    <Button onClick={handleSearchAndFilter}>
+                                        <Icon
+                                            as={SearchIcon}
+                                            boxSize={5}
+                                            color="red.500"
+                                            ml={5}
+                                            mr={5}
+                                            cursor="pointer" />
+                                    </Button>
+                                </InputRightElement>
+                            </InputGroup>
+                            <Button onClick={handleClearSearchFilterSort} ml={2}>Clear</Button>
+                        </Box>
                     </Box>
 
                     {/* put components for sorting here */}
@@ -368,6 +379,7 @@ const Dashboard = () => {
                             onChange={(e) => handleSortByDate(e.target.value)}
                             color='black'
                             backgroundColor='white'
+                            w={{ base: '140px', sm: '280px', md: "500px" }}
                         >
                             <option value="">Select</option>
                             <option value="sortField=createdAt&sortOrder=asc">By Date, Asc</option>
@@ -387,6 +399,7 @@ const Dashboard = () => {
                             onChange={(e) => handleSortByPriority(e.target.value)}
                             color='black'
                             backgroundColor='white'
+                            w={{ base: '140px', sm: '280px', md: "500px" }}
                         >
                             <option value="">Select</option>
                             <option value="priorityOrder=asc">By Priority, Asc</option>
